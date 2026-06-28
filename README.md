@@ -1,104 +1,173 @@
-☁️ AWS Cost Optimization Automation System
+# ☁️ AWS Cost Optimization Automation System
 
-Serverless automation to detect unused AWS resources and reduce cloud costs — zero manual effort!
+> **Serverless automation to detect unused AWS resources and reduce cloud costs — zero manual effort!**
 
-📌 About the Project
+---
 
-This project automates the process of identifying and cleaning up unused oridle AWS resources using a fully serverless architecture. It runs daily, validates resources before taking any action, sends alerts, and displays savings on a dashboard — all without any human intervention.
+## 📌 About the Project
 
-✨ Features
+This project automates the process of identifying and cleaning up unused or idle AWS resources using a fully serverless architecture. It runs daily, validates resources before taking any action, sends alerts, and displays savings on a dashboard — all without any human intervention.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🔍 EC2 Detection | Finds stopped or idle EC2 instances |
+| 💾 EBS Cleanup | Detects unattached EBS volumes |
+| 🪣 S3 Cleanup | Identifies empty or unused S3 buckets |
+| 📸 RDS Snapshots | Flags old snapshots older than 30 days |
+| ⚖️ Validation | Checks age, tags, usage before deletion |
+| 📧 Alerts | Sends reports via Email, Slack, or Teams |
+| 📊 Dashboard | Visualizes savings on Amazon QuickSight |
+| 🔒 Secure | Uses IAM least privilege access |
+| 🏷️ Tag Protection | Excludes critical resources from cleanup |
+| ⚙️ Automated | Runs daily via EventBridge scheduler |
+
+---
+
+## 🏗️ Architecture
+
+| Step | Service | Role |
+|------|---------|------|
+| 1 | Amazon EventBridge | Triggers Lambda daily at 8 AM IST |
+| 2 | AWS Lambda (Python + Boto3) | Main automation engine |
+| 3 | Resource Discovery | Scans EC2, EBS, S3, RDS, ELB |
+| 4 | Validation Logic | Age check, tag rules, usage check |
+| 5 | Automated Actions | Stop EC2, delete EBS / S3 / snapshots |
+| 6 | Amazon CloudWatch | Logs, metrics, error tracking |
+| 7 | Amazon SNS | Email / Slack / Teams alerts |
+| 8 | Amazon QuickSight | Cost savings dashboard |
 
 
-🔍 Detects unused EC2 instances (stopped/idle)
-💾 Finds unattached EBS volumes
-🪣 Identifies empty or unused S3 buckets
-📸 Flags old RDS snapshots (older than 30 days)
-⚖️ Validates resources before deletion (age, tags, usage, business hours)
-📧 Sends automated alerts via Email, Slack, or Teams
-📊 Visualizes savings on Amazon QuickSight dashboard
-🔒 Secure & controlled — uses IAM least privilege access
-🏷️ Tag-based protection — excludes critical resources from cleanup
-⚙️ Fully automated — runs daily via EventBridge scheduler
 
-<img width="1100" height="800" alt="aws_cost_optimization_architecture (1)" src="https://github.com/user-attachments/assets/c945d30b-b2eb-4c47-a34d-6cbc1a1c6d7d" />
+<img width="1100" height="800" alt="aws_cost_optimization_architecture (1)" src="https://github.com/user-attachments/assets/6a9d0c3f-3ff7-403d-9eea-e6f23cec97ab" />
 
-📁 Project Structure
+---
 
+## 📁 Project Structure
+
+```
 aws-cost-optimization-system/
-├── 📁 src/
-│   ├── cost_optimizer.py       # Main Lambda handler
-│   ├── ec2_cleaner.py          # EC2 resource management
-│   ├── ebs_cleaner.py          # EBS volume management
-│   ├── s3_cleaner.py           # S3 bucket management
-│   └── sns_notifier.py         # Alert notifications
-├── 📁 policies/
-│   ├── iam_policy.json         # Main IAM permissions
-│   ├── trust_policy.json       # Lambda trust policy
-│   ├── eventbridge_policy.json # EventBridge permissions
-│   └── cloudwatch_policy.json  # Logging permissions
-├── 📁 docs/
+├── src/
+│   ├── cost_optimizer.py         # Main Lambda handler
+│   ├── ec2_cleaner.py            # EC2 resource management
+│   ├── ebs_cleaner.py            # EBS volume management
+│   ├── s3_cleaner.py             # S3 bucket management
+│   └── sns_notifier.py           # Alert notifications
+├── policies/
+│   ├── iam_policy.json           # Main IAM permissions
+│   ├── trust_policy.json         # Lambda trust policy
+│   ├── eventbridge_policy.json   # EventBridge permissions
+│   └── cloudwatch_policy.json    # Logging permissions
+├── docs/
 │   └── aws_cost_optimization_architecture.jpg
 ├── .gitignore
 ├── requirement.txt
 └── README.md
+```
 
-⚙️ How It Works
+---
 
+## ⚙️ How It Works
+
+```
 Every day at 8 AM IST
-         ↓
+         |
+         v
 EventBridge triggers Lambda
-         ↓
+         |
+         v
 Lambda scans all AWS resources
-         ↓
+         |
+         v
 Validation logic checks each one
-  ├── Age check
-  ├── Usage check
-  ├── Tag / exclusion rules
-  └── Business hours check
-         ↓
-Safe to clean? → Delete / Stop + Log it
-         ↓
-SNS sends summary report (Email/Slack)
-         ↓
+  |-- Age check
+  |-- Usage check
+  |-- Tag / exclusion rules
+  |-- Business hours check
+         |
+         v
+Safe to clean? --> Delete / Stop + Log it
+         |
+         v
+SNS sends summary report (Email / Slack)
+         |
+         v
 CloudWatch stores all logs
-         ↓
+         |
+         v
 QuickSight updates savings dashboard
+```
 
+---
 
-🚀 Resources Discovered & Cleaned
+## 🚀 Resources Discovered and Cleaned
 
-ResourceConditionActionEC2 InstancesStopped / IdleStop or TerminateEBS VolumesUnattachedDeleteS3 BucketsEmpty / UnusedDeleteRDS SnapshotsOlder than 30 daysDeleteElastic Load BalancersNo trafficDeleteElastic IPsUnattachedRelease
+| Resource | Condition | Action |
+|----------|-----------|--------|
+| EC2 Instances | Stopped or Idle | Stop or Terminate |
+| EBS Volumes | Unattached | Delete |
+| S3 Buckets | Empty or Unused | Delete |
+| RDS Snapshots | Older than 30 days | Delete |
+| Elastic Load Balancers | No traffic | Delete |
+| Elastic IPs | Unattached | Release |
 
+---
 
-🔐 Security
+## 🔐 Security
 
+| Security Feature | Details |
+|-----------------|---------|
+| IAM Least Privilege | Lambda only has the permissions it needs |
+| Tag Protection | Tag any resource with `exclude:true` to skip it |
+| Validation Before Deletion | Nothing is deleted without passing all checks |
+| Business Hours Check | Avoids running during peak production hours |
+| CloudWatch Logging | Every action is logged and traceable |
 
-✅ IAM Least Privilege — Lambda only has permissions it needs
-✅ Tag Protection — Tag any resource with exclude:true to skip it
-✅ Validation before deletion — nothing is deleted without passing all checks
-✅ Business hours check — avoids running during peak production hours
-✅ CloudWatch logging — every action is logged and traceable
+---
 
+## 🛠️ Tech Stack
 
+| Technology | Purpose |
+|------------|---------|
+| Python 3.11 | Core programming language |
+| Boto3 | AWS SDK for Python |
+| AWS Lambda | Serverless compute |
+| Amazon EventBridge | Daily scheduling |
+| Amazon SNS | Notifications and alerts |
+| Amazon CloudWatch | Logging and monitoring |
+| Amazon QuickSight | Cost dashboard |
+| AWS IAM | Access control and security |
 
-📦 Installation & Setup
+---
 
-1. Clone the repository
+## 📦 Installation and Setup
 
-bashgit clone https://github.com/ughade-prathmesh/aws-cost-optimization-system.git
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/ughade-prathmesh/aws-cost-optimization-system.git
 cd aws-cost-optimization-system
+```
 
-2. Install dependencies
+**2. Install dependencies**
 
-bashpip install -r requirement.txt
+```bash
+pip install -r requirement.txt
+```
 
-3. Configure AWS CLI
+**3. Configure AWS CLI**
 
-bashaws configure
+```bash
+aws configure
+```
 
-4. Deploy Lambda function
+**4. Deploy Lambda function**
 
-bashcd src
+```bash
+cd src
 zip function.zip cost_optimizer.py ec2_cleaner.py ebs_cleaner.py s3_cleaner.py sns_notifier.py
 
 aws lambda create-function \
@@ -108,28 +177,65 @@ aws lambda create-function \
   --handler cost_optimizer.lambda_handler \
   --zip-file fileb://function.zip \
   --timeout 300
+```
 
-5. Setup EventBridge daily trigger
+**5. Setup EventBridge daily trigger**
 
-bashaws events put-rule \
+```bash
+aws events put-rule \
   --name daily-cost-check \
   --schedule-expression "cron(30 2 * * ? *)" \
   --state ENABLED
+```
 
-6. Setup SNS email alerts
+**6. Setup SNS email alerts**
 
-bashaws sns create-topic --name cost-alerts
+```bash
+aws sns create-topic --name cost-alerts
 
 aws sns subscribe \
   --topic-arn arn:aws:sns:ap-south-1:YOUR_ACCOUNT_ID:cost-alerts \
   --protocol email \
   --notification-endpoint your@email.com
+```
 
+---
 
-📊 Key Benefits
+## 📊 Key Benefits
 
-Without This SystemWith This SystemPay for unused resourcesOnly pay for what you useManual checking requiredFully automated daily scanNo visibility on wasteDashboard shows all savingsRisk of human errorValidated before every actionNo alertsReal-time email/Slack alerts
+| Without This System | With This System |
+|---------------------|-----------------|
+| Pay for unused resources | Only pay for what you use |
+| Manual checking required | Fully automated daily scan |
+| No visibility on waste | Dashboard shows all savings |
+| Risk of human error | Validated before every action |
+| No alerts | Real-time Email and Slack alerts |
+| Resources pile up silently | Cleaned up automatically every day |
 
-👨‍💻 Author
+---
 
-Prathmesh Ughade
+## 🤝 Contributing
+
+Contributions are welcome!
+
+- Star this repository
+- Report bugs via Issues
+- Submit Pull Requests
+
+---
+
+## 👨‍💻 Author
+
+**Prathmesh Ughade**
+
+GitHub : [ughade-prathmesh](https://github.com/ughade-prathmesh)
+
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+---
+
+If this project helped you, please give it a star!
