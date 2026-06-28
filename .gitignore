@@ -1,0 +1,18 @@
+# Python
+*.pyc
+__pycache__/
+venv/
+.env
+
+# AWS
+.aws/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Zip files
+*.zip
